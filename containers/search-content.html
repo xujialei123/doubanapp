@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/list-content.css"/>
+	</head>
+
+	<body>
+		<!--下拉刷新容器-->
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll  film-content">
+				<!--数据列表-->
+				
+				<ul class="mui-table-view mui-table-view-chevron">
+					<!--<li class="film-item">
+						<div class="img-box img-bg-loading">
+							<img width="100%" src="http://img3.doubanio.com/view/photo/s_ratio_poster/public/p2514293556.webp"/>
+						</div>
+						<h3>厉害了我的国</h3>
+						<div class="star">
+							
+							<i  class="mui-icon mui-icon-star-filled"></i>
+							<i  class="mui-icon mui-icon-star-filled"></i>
+							<i  class="mui-icon mui-icon-star-filled"></i>
+							<i  class="mui-icon mui-icon-star"></i>
+							<i  class="mui-icon mui-icon-star"></i>
+						</div>
+					</li>-->
+				</ul>
+			</div>
+		</div>
+		<script src="../js/zepto_1.1.3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js"></script>
+		<script>
+			var start = 0;
+			var count = 9;
+			var total = 0;
+			var q = '';
+			var tag = '';
+			var isChangeType = false
+			
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+	
+					up: {
+						auto:true,
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				$.ajax({
+					url:'http://api.douban.com/v2/movie/search',
+					data:{
+						q:q,
+						tag:tag
+					},
+					dataType:'jsonp',
+					success:function  (results) {
+						
+						if(isChangeType&&start===0){
+							mui('#pullrefresh').pullRefresh().scrollTo(0,0,0)
+							mui('#pullrefresh').pullRefresh().refresh(true);
+						}
+						//保存当前前9条的
+						if(start===0){
+							nowfilms = results.subjects
+						}
+						
+						let films = results.subjects
+						total = results.total
+						$('.mui-table-view').append(renderFilms(films))
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(start+count>=total);//参数为true代表没有更多数据了。
+						if(start+count<total){							
+							start+=count
+						}
+						
+					}
+				})
+
+			}
+			
+			function rerenderFilms(params){
+				start = 0;
+				count = 9;
+				total = 0;
+				q = params.q;
+				tag = params.tag
+				
+				isChangeType = true
+				$('.mui-table-view').html('');
+				
+				if (mui.os.plus) {//判断是不是在手机上运行
+					mui.plusReady(function() {
+						setTimeout(function() {
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+						}, 10);
+	
+					});
+				} else {
+					mui.ready(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					});
+				}
+				
+			}
+			
+			window.addEventListener('change-text',function(e){
+				rerenderFilms(e.detail)
+			})
+			
+			function renderFilms (films) {
+	
+				let str = ''
+				
+				films.forEach(function  (item,i) {
+					let stars = Math.floor(item.rating.stars/10)
+					let starstr = ''
+					let nstarstr = ''
+					for (var i =0;i<stars;i++) {
+						starstr+='<i class="mui-icon mui-icon-star-filled"></i>'
+					}
+					for (var i =0;i<5-stars;i++) {
+						nstarstr+='<i class="mui-icon mui-icon-star"></i>'
+					}
+					str+='<li data-id='+item.id+' class="film-item">'+
+						'<div class="img-box img-bg-loading">'+
+							'<img alt="" width="100%" src="'+item.images.small+'"/>'+
+						'</div>'+
+						'<h3>'+item.title+'</h3>'+
+						'<div class="star">'+starstr+nstarstr+
+						'</div>'+
+					'</li>'
+				})
+				
+				return str
+			}
+				
+
+		</script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

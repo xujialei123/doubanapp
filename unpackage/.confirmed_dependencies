@@ -1,0 +1,71 @@
+{
+  "containers/list.html": {
+    "resources": [
+      "js/zepto_1.1.3.js",
+      "css/list.css",
+      "images/list-header.jpg",
+      "containers/list-content.html"
+    ],
+    "refer": [
+      "containers/list-content.html"
+    ]
+  },
+  "containers/main.html": {
+    "resources": [
+      "js/common.js",
+      "js/zepto_1.1.3.js",
+      "css/main.css",
+      "css/swiper-4.1.6.min.css",
+      "images/loading.gif",
+      "js/swiper-4.1.6.min.js",
+      "js/vue.min.js"
+    ],
+    "refer": [
+      "containers/detail.html"
+    ]
+  },
+  "index.html": {
+    "resources": [
+      "containers/main.html",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "containers/list.html",
+      "containers/main.html",
+      "containers/mine.html"
+    ]
+  },
+  "containers/mine.html": {
+    "resources": [
+      "js/zepto_1.1.3.js",
+      "images/unlogin-bg.jpg",
+      "images/unlogin-head.jpg"
+    ],
+    "refer": [
+      "containers/login.html"
+    ]
+  },
+  "containers/list-content.html": {
+    "resources": [
+      "css/list-content.css"
+    ]
+  },
+  "containers/login.html": {
+    "resources": [
+      "js/app.js",
+      "images/sinaweibo.png",
+      "css/mui.min.css",
+      "css/style.css",
+      "images/weixin.png",
+      "images/qq.png"
+    ]
+  },
+  "containers/detail.html": {
+    "resources": [
+      "images/search-header.jpg",
+      "css/mui.min.css"
+    ]
+  }
+}

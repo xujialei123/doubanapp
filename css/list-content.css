@@ -1,0 +1,34 @@
+
+.film-content ul{
+	padding: 15px 15px;
+	margin: 0;
+	display: flex;justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.film-content ul li{
+	width: 85px;
+	display: inline-block;
+	margin: 0px 5px 10px;
+	
+}
+.film-content .img-box{
+	height: 125px;
+	overflow: hidden;
+}
+.film-content ul h3{
+	font-size: 14px;
+	font-weight: normal;
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 3px 0px;
+}
+
+.film-content .star{
+	line-height: 12px;
+}
+.film-content .star i,.film-content .star span{
+	color: #007aff;
+	font-size: 12px;
+}

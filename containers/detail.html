@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+	</head>
+	<style>
+
+		.header.mui-bar-nav{
+			box-shadow: none;background: none;
+			background:url(../images/search-header.jpg) no-repeat top;
+			background-size: 100%;
+		}
+	</style>
+	<body class="higher">
+		<header class="mui-bar mui-bar-nav header">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			//https://m.douban.com/movie/subject/20435622/
+			mui.plusReady(function  () {
+				let self = plus.webview.currentWebview()
+				let id = self.filmid
+				mui.openWindow({
+					url:'https://m.douban.com/movie/subject/'+id,
+					id:'detail-content',
+					styles:{
+						top:'45px',
+						bottom:'0px'
+					},
+					show:{
+				      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+				      aniShow:'none',//页面显示动画，默认为”slide-in-right“；
+				    }
+				})
+				
+//				TalionNav
+				let content = plus.webview.getWebviewById('detail-content')
+//				content.evalJS('window.onload=function(){document.getElementsByClassName("TalionNav")[0].style.display="none"}')
+				content.onloaded = function(){
+					
+//					content.evalJS('document.getElementsByClassName("TalionNav")[0].style.display="none";var mmm = document.getElementsByClassName("promo_top_banner")[0];mmm.parentNode.removeChild(mmm)')
+					content.evalJS('$(".TalionNav").remove();$(".promo_top_banner").remove();$(".page").css("padding-top","0px")')
+				}
+				
+			})
+			
+		</script>
+	</body>
+
+</html>

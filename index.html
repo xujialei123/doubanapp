@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="./css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+		</style>
+	</head>
+
+	<body>
+		
+		<nav class="mui-bar mui-bar-tab">
+			<a id="defaultTab" class="mui-tab-item mui-active" href="./containers/main.html">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="./containers/list.html">
+				<span class="mui-icon mui-icon-list"></span>
+				<span class="mui-tab-label">列表</span>
+			</a>
+			
+			<a class="mui-tab-item" href="./containers/mine.html">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		<script src="./js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+//			navigator.userAgent
+		
+			 //mui初始化
+			mui.init({
+//				statusBarBackground: '#f7f7f7'//可以设置状态栏颜色
+			});
+			
+			//存放子界面里的页面的路径？？？
+			var subpages = ['./containers/main.html', './containers/list.html', './containers/mine.html'];
+			
+			//子界面的样式
+			var subpage_style = {
+				top: '0px',
+				bottom: '51px'
+			};
+			
+			//记录，有哪些窗口已经进入过了
+			var aniShow = {};
+			
+			 //创建子页面，首个选项卡页面显示，其它均隐藏；
+			// 在这里使用plus最最安全
+			mui.plusReady(function() {
+				plus.screen.lockOrientation("portrait-primary");//只能竖屏
+				//获取到当前窗口，也就是这个应用中的主窗口
+				var self = plus.webview.currentWebview();
+				//循环创建子界面并嵌入H5页面
+				for (var i = 0; i < 3; i++) {
+					var temp = {};
+					//创建子窗口 1-url 2-id  3-样式
+					var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+					if (i > 0) {
+						//如果不是第一个的话，就隐藏吧
+						sub.hide();
+					}else{
+						//新创建的窗口，如果不 あいしてる 隐藏的话，会直接显示
+						temp[subpages[i]] = "true";
+//						{
+//							'./containers/main.html':'true'
+//						}
+						mui.extend(aniShow,temp);
+					}
+					self.append(sub);
+				}
+			});
+			
+			
+			 //当前激活选项
+			var activeTab = subpages[0];
+//			var title = document.getElementById("title");
+			 //选项卡点击事件
+			 console.log(mui('.mui-bar-tab'))
+			mui('.mui-bar-tab').on('tap', 'a', function(e) {
+				//获取到对应的窗口的地址或者id
+				var targetTab = this.getAttribute('href');
+				if (targetTab == activeTab) {//如果点击的就是当前的，那么return
+					return;
+				}
+				//更换标题
+//				title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+				//显示目标选项卡
+				//若为iOS平台或非首次显示，则直接显示
+
+				if(mui.os.ios||aniShow[targetTab]){
+					//直接显示
+					plus.webview.show(targetTab);
+				}else{
+					//否则，使用fade-in动画，且保存变量
+					var temp = {};
+					temp[targetTab] = "true";
+//					{
+//						'./containers/main.html':'true',
+//						'./containers/list.html':'true'
+//						'./containers/more.html':'true'
+//					}
+					mui.extend(aniShow,temp);
+					plus.webview.show(targetTab,"fade-in",300);
+				}
+				//隐藏当前;
+				plus.webview.hide(activeTab);
+				//更改当前活跃的选项卡
+				activeTab = targetTab;
+			});
+//			 //自定义事件，模拟点击“首页选项卡”
+//			document.addEventListener('gohome', function() {
+//				var defaultTab = document.getElementById("defaultTab");
+//				//模拟首页点击
+//				mui.trigger(defaultTab, 'tap');
+//				//切换选项卡高亮
+//				var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+//				if (defaultTab !== current) {
+//					current.classList.remove('mui-active');
+//					defaultTab.classList.add('mui-active');
+//				}
+//			});
+
+		
+
+
+		</script>
+	</body>
+
+</html>

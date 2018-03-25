@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/search.css"/>
+	</head>
+
+	<body class="higher">
+		<div class="header">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<div class="mui-pull-right btns">
+					<button type="button" class="mui-btn mui-btn-success">动作</button>
+					<button type="button" class="mui-btn mui-btn-warning">喜剧</button>
+					<button type="button" class="mui-btn mui-btn-danger">爱情</button>
+					<button type="button" class="mui-btn mui-btn-royal">悬疑</button>
+				</div>
+				 
+			</header>
+			<form id="form">
+				<div class="mui-input-row mui-search">
+				    <input id="inp" type="search" class="mui-input-clear" placeholder="">
+				</div>
+			</form>
+			
+		</div>
+		<script src="../js/zepto_1.1.3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			//启用双击监听
+			mui.init({
+				gestureConfig:{
+					doubletap:true
+				},
+				subpages:[{
+					url:'search-content.html',
+					id:'search-content.html',
+					styles:{
+						top: '110px',
+						bottom: '0px',
+					}
+				}]
+			});
+			let content = null
+
+			$("#form").submit(function(e){
+				e.preventDefault()
+				
+				if(content === null){
+					content = plus.webview.getWebviewById('search-content.html')
+				}
+				
+				mui.fire(content,'change-text',{
+					q:$("#inp").val(),
+					tag:''
+				})
+				
+			})
+			
+			$(".btns").on('tap','button',function  () {
+				let tag = $(this).html()
+				if(content === null){
+					content = plus.webview.getWebviewById('search-content.html')
+				}
+				
+				mui.fire(content,'change-text',{
+					q:'',
+					tag:tag
+				})
+			})
+			
+
+		</script>
+	</body>
+
+</html>

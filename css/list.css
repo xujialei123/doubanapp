@@ -1,0 +1,17 @@
+
+.header{
+	height: 110px;
+	padding-top: 55px;
+	background:url(../images/list-header.jpg) no-repeat top;
+	background-size: 100%;
+}
+.header .mui-bar-nav{
+	box-shadow: none;background: none;
+}
+
+.header .mui-control-item{
+	/*color: #fff!important;*/
+}
+
+
+

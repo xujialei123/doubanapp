@@ -1,0 +1,62 @@
+.banner .swiper-slide,.banner .swiper-wrapper{
+	height: 56vw;
+}
+
+.film-box{
+	padding-top:10px ;
+	background: #fff;
+	margin: 10px 0px;
+}
+
+.film-box header{
+	padding: 0 1.12rem;
+}
+
+.film-box header h2{
+	display: inline-block;
+    min-width: 4em;
+    margin-bottom: 0;
+    font-size: 18px;
+    color: #111;
+    padding-left: 0;
+    padding-bottom: 0;
+    font-size: 1.06rem;
+    font-weight: normal;
+}
+.film-box header a{
+	float: right;
+    font-size: .9rem;
+    line-height: 1.5rem;
+}
+.film-content {
+	position: relative!important;
+	height: 252px;
+}
+.film-content ul{
+	padding: 15px 15px;
+	margin: 0;
+}
+
+.film-content ul li{
+	width: 120px;
+	display: inline-block;
+	margin: 0px 5px;
+	
+}
+.film-content .img-box{
+	height: 171.4px;
+	overflow: hidden;
+}
+.film-content ul h3{
+	font-size: 14px;
+	font-weight: normal;
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.film-content .star i,.film-content .star span{
+	color: #007aff;
+	font-size: 12px;
+}

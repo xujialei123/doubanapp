@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			
+			.head-content{
+				padding-top: 15px;
+				height: 200px;
+				display: flex;
+				flex-flow: column;
+				justify-content: space-around;
+				align-items: center;
+				position: relative;
+			}
+			.head-content .head-bg{
+				width: 100%;height: 100%;
+				background-image: url(../images/unlogin-bg.jpg);
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center center;
+				 -webkit-filter: blur(15px);
+	            -moz-filter: blur(15px);
+	            -o-filter: blur(15px);
+	            -ms-filter: blur(15px);
+	            filter: blur(15px);
+	            position: absolute;
+	            top: 0;left: 0;
+	            z-index: 1;
+			}
+			.head-content .head-img{
+				width: 100px;
+				height: 100px;
+				border-radius: 50%;
+				border:5px solid #fff;
+				overflow: hidden;
+				position: relative;z-index: 2;
+			}
+			.head-content .head-img img{
+				width: 100%;height: 100%;
+			}
+			.head-content p{
+				position: relative;z-index: 2;
+			}
+		</style>
+	</head>
+
+	<body>
+		
+		<div class="head-content">
+			<div class="head-bg"></div>
+			<div class="head-img">
+				<img src="../images/unlogin-head.jpg" alt="" />
+			</div>
+			<p class="mui-text-center">
+				<button id="login" class="mui-btn mui-btn-blue">未登录</button>
+				<span id="username" >
+					<button id="text" class="mui-btn mui-btn-blue">asdasd</button>
+					<button  id="exit" class="mui-btn mui-btn-blue">退出</button>
+				</span>
+				
+				
+			</p>
+		</div>
+		
+	</body>
+	<script src="../js/zepto_1.1.3.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/mui.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		init()
+		
+		function init () {
+			checkLogin()
+		}
+		
+		function checkLogin (){
+			let userInfo = getUserInfo()
+			if(userInfo.name){
+				$(".head-img img").attr('src',userInfo.headimgurl)
+				$(".head-bg").css('background-image','url('+userInfo.headimgurl+')')
+				$("#login").hide()
+				$("#username").show().find("#text").html(userInfo.name)
+			}else{
+				$(".head-img img").attr('src','../images/unlogin-head.jpg')
+				$(".head-bg").css('background-image','url(../images/unlogin-bg.jpg)')
+				$("#login").show()
+				$("#username").hide()
+			}
+			
+		}
+		
+		function getUserInfo(){
+			return JSON.parse(localStorage.userInfo||'{}')
+		}
+		
+		window.addEventListener("logined",checkLogin)
+		
+		$("#login").on("tap",function  () {
+			mui.openWindow({
+				url:'login.html',
+				id:'login.html',
+				styles:{top:'0',bottom:'0'}
+			})
+		})
+		$("#exit").on("tap",function  () {
+			localStorage.removeItem('userInfo')
+			checkLogin ()
+		})
+		$(".head-img").on("tap",function  () {
+			let userInfo = getUserInfo()
+			if(userInfo.name){
+				
+				plus.nativeUI.actionSheet( {cancel:"取消",buttons:[{title:"拍照"},{title:"相册"}]}, function(e){
+					console.log( "User pressed: "+e.index );
+					if(e.index===1){
+						//拍照
+						
+						var cmr = plus.camera.getCamera();//获取摄像头
+						//获得相机支持的某种分辨率和格式
+						var res = cmr.supportedImageResolutions[0];
+						var fmt = cmr.supportedImageFormats[0];
+						//拍照
+						cmr.captureImage( function( path ){
+//								alert( "Capture image success: " + path );  
+								movePictureToHead(path,userInfo)
+							},
+							{resolution:res,format:fmt}
+						);					
+					}else if(e.index === 2){
+						//从相册选取
+						plus.gallery.pick(function(path){
+							movePictureToHead(path,userInfo)
+						})
+					}
+				});
+				
+			}
+		})
+		
+				//将获取的图片路径放到页面中
+		function movePictureToHead(path,userInfo){
+			//会根据路径找见对应的文件路径
+			plus.io.resolveLocalFileSystemURL(path, function(entry) { 
+				//真正的图片路径
+                var s = entry.toLocalURL() + "?version=" + new Date().getTime(); 
+                userInfo.headimgurl=s;		                    
+				//uploadHead(s); /*上传图片*/ 
+				$(".head-img img").prop("src",s)
+				$(".head-bg").css('background-image','url('+userInfo.headimgurl+')')
+				//更新本地存储中的信息			
+				localStorage.userInfo=JSON.stringify(userInfo)
+				plus.device.beep( 200 );
+            });
+		}
+	</script>
+</html>
